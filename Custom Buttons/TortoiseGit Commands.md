@@ -1,4 +1,12 @@
 
+[Source](https://tortoisegit.org/docs/tortoisegit/tgit-automation.html)
+
+Common Commands to use with TortoiseGit. 
+
+The matching icons can be found in 
+```
+%programfiles%\TortoiseGit\bin\TortoiseGitProc.exe
+```
 ## Show Log
 
 ```
@@ -23,8 +31,3 @@ TortoiseGitProc.exe /command:pull /path:{sourcepath}
 TortoiseGitProc.exe /command:switch /path:{sourcepath}
 ```
 
-## Icons From
-
-```
-TortoiseGitProc.exe
-```
