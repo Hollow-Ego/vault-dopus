@@ -1,7 +1,7 @@
 ## Details
 
 ### Author
-chaoticbob 
+chaoticbob (modified by Leo)
 
 ### Source
 [Source](https://resource.dopus.com/t/showing-git-branch-in-dopus/18347/8)
@@ -17,30 +17,37 @@ Then copy and paste the script below and restart DOpus.
 
 ## Script
 ```js
-// CurrentBranch
-// (c) 2017 chaoticbob
-// https://resource.dopus.com/t/showing-git-branch-in-dopus/18347/8
-
-// This is a script for Directory Opus.
-// See https://www.gpsoft.com.au/DScripts/redirect.asp?page=scripts for development information.
+function OnInit(initData) {
+	initData.name = "Git Branch Title";
+	initData.version = "1.0";
+	//	initData.copyright = "...";
+	initData.url =
+		"https://resource.dopus.com/t/showing-git-branch-in-dopus/18347";
+	initData.desc = "Show Git branch in window title";
+	initData.default_enable = true;
+	initData.min_version = "12.0";
+}
 
 function FindGitHead(path) {
 	var git_head_path = null;
-	var n = path.components;
-	for (var i = 0; i < n; ++i) {
-		var file_path = DOpus.FSUtil.NewPath(path);
-		file_path.Add(".git");
-		file_path.Add("HEAD");
-		if (DOpus.FSUtil.Exists(file_path)) {
-			git_head_path = DOpus.FSUtil.NewPath(file_path);
-			break;
+	if (path.drive != 0) {
+		// Leo 26/Jun/2018: Only check on local drives.
+		var n = path.components;
+		for (var i = 0; i < n; ++i) {
+			var file_path = DOpus.FSUtil.NewPath(path);
+			file_path.Add(".git");
+			file_path.Add("HEAD");
+			if (DOpus.FSUtil.Exists(file_path)) {
+				git_head_path = DOpus.FSUtil.NewPath(file_path);
+				break;
+			}
+			path.Parent();
 		}
-		path.Parent();
 	}
 	return git_head_path;
 }
 
-function ReadGitBranch(path) {
+function ReatGitBranch(path) {
 	var git_branch = null;
 	var fso = new ActiveXObject("Scripting.FilesystemObject");
 	var file = fso.OpenTextFile(path, 1, -2);
@@ -60,14 +67,17 @@ function UpdateTitleAndLabel(tab) {
 	var label = tab.path.filepart;
 	var git_head_path = FindGitHead(tab.path);
 	if (git_head_path != null) {
-		var git_branch = ReadGitBranch(git_head_path);
+		var git_branch = ReatGitBranch(git_head_path);
 		if (git_branch != null) {
 			label = label + " (" + git_branch + ")";
 		}
-	} // New DOpus command
-	var dopus_cmd = DOpus.NewCommand(); // Change lister title
+	}
+	// New DOpus command
+	var dopus_cmd = DOpus.NewCommand();
+	// Change lister title
 	var cmd = 'SET LISTERTITLE="' + label + '"';
-	dopus_cmd.RunCommand(cmd); // Change tab label
+	dopus_cmd.RunCommand(cmd);
+	// Change tab label
 	var cmd = 'GO TABNAME="' + label + '"';
 	dopus_cmd.RunCommand(cmd);
 }
