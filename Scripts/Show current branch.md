@@ -47,7 +47,7 @@ function FindGitHead(path) {
 	return git_head_path;
 }
 
-function ReatGitBranch(path) {
+function ReadGitBranch(path) {
 	var git_branch = null;
 	var fso = new ActiveXObject("Scripting.FilesystemObject");
 	var file = fso.OpenTextFile(path, 1, -2);
@@ -67,7 +67,7 @@ function UpdateTitleAndLabel(tab) {
 	var label = tab.path.filepart;
 	var git_head_path = FindGitHead(tab.path);
 	if (git_head_path != null) {
-		var git_branch = ReatGitBranch(git_head_path);
+		var git_branch = ReadGitBranch(git_head_path);
 		if (git_branch != null) {
 			label = label + " (" + git_branch + ")";
 		}
